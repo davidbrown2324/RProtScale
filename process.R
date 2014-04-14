@@ -1,18 +1,19 @@
 library(ggplot2)
 library(seqinr)
-source("/home/jon/Programming/R/mmsf/multiplot.R")
-source("/home/jon/Programming/R/mmsf/alignment.R")
-source("/home/jon/Programming/R/mmsf/protscale.R")
+
+source("/home/jon/Programming/R/RProtScale/multiplot.R")
+source("/home/jon/Programming/R/RProtScale/alignment.R")
+source("/home/jon/Programming/R/RProtScale/protscale.R")
 
 seqnames <- c("Q2W8R4","Q2W8R8","Q2W8J5")  # Make a vector containing the names of the sequences
 seqs <- retrieveseqs(seqnames,"swissprot")  #http://a-little-book-of-r-for-bioinformatics.readthedocs.org/en/latest/src/chapter5.html
 hydrop_mmsf <- protscale("Q2W8R4",length(seqs[[1]]))
-hydrop_0953 <- protscale("Q2W8R8",length(seqs[[3]]))
-hydrop_1026 <- protscale("Q2W8J5",length(seqs[[5]]))
+hydrop_0953 <- protscale("Q2W8R8",length(seqs[[2]]))
+hydrop_1026 <- protscale("Q2W8J5",length(seqs[[3]]))
 
 seq_data_mmsf <- data.frame(c(1:length(seqs[[1]])),seqs[[1]])
-seq_data_0953 <- data.frame(c(1:length(seqs[[3]])),seqs[[3]])
-seq_data_1026 <- data.frame(c(1:length(seqs[[5]])),seqs[[5]])
+seq_data_0953 <- data.frame(c(1:length(seqs[[2]])),seqs[[2]])
+seq_data_1026 <- data.frame(c(1:length(seqs[[3]])),seqs[[3]])
 
 colnames(seq_data_mmsf) <- c("Position","AA")
 colnames(seq_data_0953) <- c("Position","AA")
