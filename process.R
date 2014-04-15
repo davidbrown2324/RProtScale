@@ -32,9 +32,14 @@ data_1026 <- merge(hydrop_1026,seq_data_1026, by="Position")
 data_mmsf$tmpred_io <- tmpred_mmsf$io
 data_0953$tmpred_io <- tmpred_0953$io
 data_1026$tmpred_io <- tmpred_1026$io
+
 data_mmsf$tmpred_oi <- tmpred_mmsf$oi
 data_0953$tmpred_oi <- tmpred_0953$oi
 data_1026$tmpred_oi <- tmpred_1026$oi
+
+data_mmsf$name <- "Mmsf"
+data_0953$name <- "0953"
+data_1026$name <- "1026"
 
 #p1 <- ggplot(data_mmsf, aes( Position, Value )) + ggtitle("amb0957 mmsF") + geom_line() + scale_y_continuous("Hydropathy Index",limits=c(-3, 3)) + scale_x_continuous("Sequence Position",limits=c(0, 110))
 #p2 <- ggplot(data_1026, aes( Position, Value )) + ggtitle("amb1026") + geom_line() + scale_y_continuous("Hydropathy Index",limits=c(-3, 3)) +  scale_x_continuous("Sequence Position",limits=c(0, 110))
@@ -48,22 +53,39 @@ data_1026$tmpred_oi <- tmpred_1026$oi
 g = brewer.pal(3,"Set1")
 
 #multiplot(p1, p2, p3, cols=1)
-ggplot() + 
-  geom_line(aes(Position, Value, colour=g[1]), data_mmsf) +  
-  geom_line(aes(Position, Value, colour=g[2]), data_1026)
+#ggplot() + 
+ # geom_line(aes(Position, Value, colour=g[1]), data_mmsf) +  
+ # geom_line(aes(Position, Value, colour=g[2]), data_1026)
 
-rows = 4
-cols = 5
-pos = 6
-ins = data.frame(matrix(nrow = rows,  ncol = cols))
-for(i in seq_len(rows)){ins[i, ] <- c(0,0,"X",0,0)} 
-colnames(ins) <- c("Position","Value","AA","tmpred_io","tmpred_oi")
 
-dat_new <-rbind(data_mmsf[1:pos,],ins)
-dat_comb <- rbind(dat_new,data_mmsf[(pos+1):(nrow(data_mmsf)),])
-data_mmsf <- dat_comb
-data_mmsf$Position <-as.numeric(seq(1:nrow(data_mmsf)))
+insert <- function(frame,nrows,pos) {
+  cols = length(frame)
+  name = frame$name[1]
+  ins = data.frame(matrix(nrow = nrows,  ncol = cols))
+  for(i in seq_len(nrows)){ins[i, ] <- c(0,0,"X",0,0,name)} 
+  
+  colnames(ins) <- colnames(frame)
+  
+  dat_new <-rbind(frame[1:pos,],ins)
+  dat_comb <- rbind(dat_new,frame[(pos+1):(nrow(frame)),])
+  frame <- dat_comb
+  frame$Position <-as.numeric(seq(1:nrow(frame)))
+  frame$Value <-as.numeric(frame$Value)
+  frame$tmpred_io <-as.numeric(frame$tmpred_io)
+  frame$tmpred_oi <-as.numeric(frame$tmpred_oi)
+  return(frame)
+}
 
-ggplot() + 
-  #geom_line(aes(Position, Value, colour=g[1]), data_mmsf) +  
-  geom_line(aes(Position, Value, colour=g[2]), data_1026)
+data_mmsf<-insert(data_mmsf,4,6)
+# handles the alignment insertion
+
+
+# combine data
+all_data_a <- rbind(data_mmsf,data_0953)
+all_data <- rbind(all_data_a,data_1026)
+
+p1 <- ggplot(all_data,aes(x=Position, y = Value, group=name,colour = name)) + geom_line()
+p1
+p2 <- ggplot(all_data,aes(x=Position, y = tmpred_io, group=name, colour = name)) + geom_line()
+p2
+
