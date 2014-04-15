@@ -54,3 +54,29 @@ printMultipleAlignment <- function(alignment, chunksize=60)
     print(paste(' '))
   }
 }
+
+
+gap_insert <- function(frame,nrows,pos) {
+  cols = length(frame)
+  name = frame$name[1]
+  ins = data.frame(matrix(nrow = nrows,  ncol = cols))
+  for(i in seq_len(nrows)){ins[i, ] <- c(0,0,"X",0,0,name)} # no so generic
+  
+  colnames(ins) <- colnames(frame) # copy of the column names
+  
+  dat_new <-rbind(frame[1:pos,],ins)
+  dat_comb <- rbind(dat_new,frame[(pos+1):(nrow(frame)),])
+  frame <- dat_comb
+  frame$Position <-as.numeric(seq(1:nrow(frame))) # re number the positions
+  frame$Value <-as.numeric(frame$Value) # re numeric ize , this is odd behaviour
+  frame$tmpred_io <-as.numeric(frame$tmpred_io)
+  frame$tmpred_oi <-as.numeric(frame$tmpred_oi)
+  return(frame)
+}
+
+seq_string <- function(sequence){
+  return (paste(sequence, sep="", collapse="") )
+}
+
+
+
