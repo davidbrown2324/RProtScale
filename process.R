@@ -1,5 +1,6 @@
 library(ggplot2)
 library(seqinr)
+library(RColorBrewer)
 
 source("/home/jon/Programming/R/RProtScale/multiplot.R")
 source("/home/jon/Programming/R/RProtScale/alignment.R")
@@ -39,10 +40,30 @@ data_1026$tmpred_oi <- tmpred_1026$oi
 #p2 <- ggplot(data_1026, aes( Position, Value )) + ggtitle("amb1026") + geom_line() + scale_y_continuous("Hydropathy Index",limits=c(-3, 3)) +  scale_x_continuous("Sequence Position",limits=c(0, 110))
 #p3 <- ggplot(data_0953, aes( Position, Value )) + ggtitle("amb0953") + geom_line() + scale_y_continuous("Hydropathy Index",limits=c(-3, 3)) + scale_x_continuous("Sequence Position",limits=c(0, 110))
 
-p1 <- ggplot(data_mmsf) + ggtitle("amb0957 mmsF") + geom_line(aes( Position, tmpred_io ))+ geom_line(aes( Position, tmpred_oi )) + scale_y_continuous() + scale_x_continuous("Sequence Position",limits=c(0, length(seqs[[1]])))
-p2 <- ggplot(data_1026, aes( Position, tmpred_io )) + ggtitle("amb1026") + geom_line() + scale_y_continuous() +  scale_x_continuous("Sequence Position",limits=c(0, length(seqs[[2]])))
-p3 <- ggplot(data_0953, aes( Position, tmpred_io )) + ggtitle("amb0953") + geom_line() + scale_y_continuous() + scale_x_continuous("Sequence Position",limits=c(0, length(seqs[[3]])))
+#p1 <- ggplot(data_mmsf, aes( Position, Value )) + geom_line(data_0953, aes( Position, Value ))
 
-multiplot(p1, p2, p3, cols=1)
+#p1 <- ggplot(data_mmsf) + ggtitle("amb0957 mmsF") + geom_line(aes( Position, tmpred_io ))+ geom_line(aes( Position, tmpred_oi, linetype="dotted" )) + scale_y_continuous() + scale_x_continuous("Sequence Position",limits=c(0, length(seqs[[1]])))
+#p2 <- ggplot(data_1026, aes( Position, tmpred_io )) + ggtitle("amb1026") + geom_line() + scale_y_continuous() +  scale_x_continuous("Sequence Position",limits=c(0, length(seqs[[2]])))
+#p3 <- ggplot(data_0953, aes( Position, tmpred_io )) + ggtitle("amb0953") + geom_line() + scale_y_continuous() + scale_x_continuous("Sequence Position",limits=c(0, length(seqs[[3]])))
+g = brewer.pal(3,"Set1")
 
+#multiplot(p1, p2, p3, cols=1)
+ggplot() + 
+  geom_line(aes(Position, Value, colour=g[1]), data_mmsf) +  
+  geom_line(aes(Position, Value, colour=g[2]), data_1026)
 
+rows = 4
+cols = 5
+pos = 6
+ins = data.frame(matrix(nrow = rows,  ncol = cols))
+for(i in seq_len(rows)){ins[i, ] <- c(0,0,"X",0,0)} 
+colnames(ins) <- c("Position","Value","AA","tmpred_io","tmpred_oi")
+
+dat_new <-rbind(data_mmsf[1:pos,],ins)
+dat_comb <- rbind(dat_new,data_mmsf[(pos+1):(nrow(data_mmsf)),])
+data_mmsf <- dat_comb
+data_mmsf$Position <-as.numeric(seq(1:nrow(data_mmsf)))
+
+ggplot() + 
+  #geom_line(aes(Position, Value, colour=g[1]), data_mmsf) +  
+  geom_line(aes(Position, Value, colour=g[2]), data_1026)
