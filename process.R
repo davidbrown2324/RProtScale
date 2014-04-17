@@ -67,10 +67,10 @@ data_mmsf<-gap_insert(data_mmsf,4,6)  #quick method to shift data
 # combine data
 all_data_a <- rbind(data_mmsf,data_0953)
 all_data <- rbind(all_data_a,data_1026)
-
+theme_set(theme_gray(base_size = 22))
 p1 <- ggplot(all_data,aes(x=Position, y = Value, group=name,colour = name)) + ylab("Hydropathy Index") + geom_line() + scale_colour_discrete(name="Protein",
                                                                                                                 breaks=c("Mmsf", "0953", "1026"),
-                                                                                                                labels=c("Mmsf", "0953", "1026"))
+                                                                                                           labels=c("Mmsf", "0953", "1026"))
 p2 <- ggplot(all_data,aes(x=Position, y = tmpred_io, group=name, colour = name)) + geom_line() + ylab("Score")+ scale_colour_discrete(name="Protein",
                                                                                                                        breaks=c("Mmsf", "0953", "1026"),
                                                                                                                        labels=c("Mmsf", "0953", "1026"))
