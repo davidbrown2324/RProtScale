@@ -7,6 +7,11 @@ source("/home/jon/Programming/R/RProtScale/alignment.R")
 source("/home/jon/Programming/R/RProtScale/protscale.R")
 source("/home/jon/Programming/R/RProtScale/tmpred.R")
 
+theme_white <- function() {
+  theme_update(panel.background = element_blank(),
+               panel.grid.major = element_blank())
+}
+
 seqnames <- c("Q2W8R4","Q2W8R8","Q2W8J5")  # Make a vector containing the names of the sequences
 seqs <- retrieveseqs(seqnames,"swissprot")  #http://a-little-book-of-r-for-bioinformatics.readthedocs.org/en/latest/src/chapter5.html
 hydrop_mmsf <- protscale("Q2W8R4",length(seqs[[1]]))
@@ -26,8 +31,6 @@ colnames(seq_data_0953) <- c("Position","AA")
 colnames(seq_data_1026) <- c("Position","AA")
 
 str <- seq_string(seq_data_mmsf$AA)
-
-
 
 data_mmsf <- merge(hydrop_mmsf,seq_data_mmsf, by="Position")
 data_0953 <- merge(hydrop_0953,seq_data_0953, by="Position")
@@ -67,13 +70,15 @@ data_mmsf<-gap_insert(data_mmsf,4,6)  #quick method to shift data
 # combine data
 all_data_a <- rbind(data_mmsf,data_0953)
 all_data <- rbind(all_data_a,data_1026)
-theme_set(theme_gray(base_size = 22))
-p1 <- ggplot(all_data,aes(x=Position, y = Value, group=name,colour = name)) + ylab("Hydropathy Index") + geom_line() + scale_colour_discrete(name="Protein",
-                                                                                                                breaks=c("Mmsf", "0953", "1026"),
-                                                                                                           labels=c("Mmsf", "0953", "1026"))
-p2 <- ggplot(all_data,aes(x=Position, y = tmpred_io, group=name, colour = name)) + geom_line() + ylab("Score")+ scale_colour_discrete(name="Protein",
+theme_set(theme_bw(base_size = 20))
+theme_white()
+#p1 <- ggplot(all_data,aes(x=Position, y = Value, group=name,colour = name)) + ylab("Hydropathy Index") + geom_line() + scale_colour_discrete(name="Protein",
+  #                                                                                                              breaks=c("Mmsf", "0953", "1026"),
+    #                                                                                                       labels=c("Mmsf", "0953", "1026"))
+p2 <- ggplot(all_data,aes(x=Position, y = tmpred_io, group=name, colour = name)) + geom_line() + scale_x_continuous(limits=c(0,125)) + ylab("Score")+ scale_colour_discrete(name="Protein",
                                                                                                                        breaks=c("Mmsf", "0953", "1026"),
                                                                                                                        labels=c("Mmsf", "0953", "1026"))
 
-multiplot(p1, p2, cols=1)
+p2
+#multiplot(p1, p2, cols=1)
 
