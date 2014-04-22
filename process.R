@@ -82,3 +82,11 @@ p2 <- ggplot(all_data,aes(x=Position, y = tmpred_io, group=name, colour = name))
 p2
 #multiplot(p1, p2, cols=1)
 
+
+#svg(filename = "sleepplot.svg", width = 6, height = 4)
+#dev.off()
+
+
+source("/home/jon/Programming/R/RProtScale/alignmentplot.R")
+alignplot(data_1026$AA)
+sub <- subset(all_data, name== 'Mmsf', select = AA)
