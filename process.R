@@ -45,8 +45,8 @@ data_0953$tmpred_oi <- tmpred_0953$oi
 data_1026$tmpred_oi <- tmpred_1026$oi
 
 data_mmsf$name <- "Mmsf"
-data_0953$name <- "0953"
-data_1026$name <- "1026"
+data_0953$name <- "amb0953"
+data_1026$name <- "amb1026"
 
 #p1 <- ggplot(data_mmsf, aes( Position, Value )) + ggtitle("amb0957 mmsF") + geom_line() + scale_y_continuous("Hydropathy Index",limits=c(-3, 3)) + scale_x_continuous("Sequence Position",limits=c(0, 110))
 #p2 <- ggplot(data_1026, aes( Position, Value )) + ggtitle("amb1026") + geom_line() + scale_y_continuous("Hydropathy Index",limits=c(-3, 3)) +  scale_x_continuous("Sequence Position",limits=c(0, 110))
@@ -82,11 +82,10 @@ p2 <- ggplot(all_data,aes(x=Position, y = tmpred_io, group=name, colour = name))
 p2
 #multiplot(p1, p2, cols=1)
 
-
 #svg(filename = "sleepplot.svg", width = 6, height = 4)
 #dev.off()
 
-
 source("/home/jon/Programming/R/RProtScale/alignmentplot.R")
-alignplot(data_1026$AA)
-sub <- subset(all_data, name== 'Mmsf', select = AA)
+seq_list = list("Mmsf","amb0953","amb1026")
+alignplot(all_data,seq_list,111)
+
